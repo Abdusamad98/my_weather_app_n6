@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_weather_app/ui/routes.dart';
 import 'package:my_weather_app/ui/screens/weather_main/weather_main_screen.dart';
+import 'package:my_weather_app/utils/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WeatherMainScreen(),
+      onGenerateRoute:(settings) => MyRouter.generateRoute(settings),
+      initialRoute: mainScreen,
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:my_weather_app/data/models/detail/one_call_data.dart';
 import 'package:my_weather_app/data/models/helper/lat_lon.dart';
 import 'package:my_weather_app/data/models/weather_main_model.dart';
 
@@ -30,9 +31,8 @@ class AppRepository {
     }
   }
 
-  static Future<WeatherMainModel> getWeatherMainDataByLocation({
-    required LatLong latLong
-  }) async {
+  static Future<WeatherMainModel> getWeatherMainDataByLocation(
+      {required LatLong latLong}) async {
     var queryParams = {
       "lat": latLong.lat.toString(),
       "lon": latLong.long.toString(),
@@ -52,5 +52,26 @@ class AppRepository {
     }
   }
 
+  static Future<OneCallData> getHourlyDailyWeather({required LatLong latLong}) async {
+    var queryParams = {
+      "lat": latLong.lat.toString(),
+      "lon": latLong.long.toString(),
+      "units": "metric",
+      "exclude": "minutely,current",
+      "appid": API_TOKEN,
+    };
+    var uri = Uri.https(BASE_URL, "/data/2.5/onecall", queryParams);
 
+    try {
+      Response response = await http.get(uri);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print(response.body);
+        return OneCallData.fromJson(jsonDecode(response.body));
+      }
+      throw Exception();
+    } catch (e) {
+      print(e.toString());
+      throw Exception();
+    }
+  }
 }
