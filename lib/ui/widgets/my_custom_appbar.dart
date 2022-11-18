@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_weather_app/ui/widgets/search_delegate_view.dart';
+import 'package:my_weather_app/utils/my_utils.dart';
 
 class MyCustomAppBar extends StatelessWidget implements PreferredSize {
-  const MyCustomAppBar(
-      {Key? key, required this.onSearchTap, required this.title})
-      : super(key: key);
+  const MyCustomAppBar({
+    Key? key,
+    required this.onSearchTap,
+    required this.title,
+  }) : super(key: key);
 
-  final VoidCallback onSearchTap;
+  final ValueChanged<String> onSearchTap;
   final String title;
 
   @override
@@ -14,10 +18,20 @@ class MyCustomAppBar extends StatelessWidget implements PreferredSize {
     return AppBar(
       backgroundColor: Colors.yellow,
       elevation: 0,
-      title: Text(title,style: TextStyle(color: Colors.black),),
+      title: Text(
+        title,
+        style:const TextStyle(color: Colors.black),
+      ),
       actions: [
         IconButton(
-            onPressed: onSearchTap,
+            onPressed: () async {
+              var searchText = await showSearch(
+                context: context,
+                delegate:
+                    SearchDelegateView(suggestionList: MyUtils.getPlaceNames()),
+              );
+              onSearchTap.call(searchText);
+            },
             icon: const Icon(
               Icons.search,
               color: Colors.black,
@@ -27,7 +41,6 @@ class MyCustomAppBar extends StatelessWidget implements PreferredSize {
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.yellow,
-
       ),
     );
   }
