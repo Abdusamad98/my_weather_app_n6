@@ -67,8 +67,7 @@ class _WeatherMainScreenState extends State<WeatherMainScreen> {
                   }
                 }),
             FutureBuilder<OneCallData>(
-              future:
-                  AppRepository.getHourlyDailyWeather(latLong: widget.latLong),
+              future: AppRepository.getHourlyDailyWeather(latLong: widget.latLong),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
